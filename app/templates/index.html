@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div style="margin-left: 20px; margin-bottom: 20px; margin-top: 20px;"> 
+      <h1>Recent Sightings</h1>
+    </div>
+    
+  
+
+    {% for post in posts %}
+    
+      <article class="media content-section">
+
+          <table class="media-body">
+            <tr>
+              <!---<td style="width:25%"><img class="rounded-circle article-img" src="static/elon.jpg"></td> -->
+              <td style="width:25%"><img class="rounded-circle article-img" src="{{ post.AmberAlert.picture_url }}"></td>
+              
+              <td style="width:20%">
+                <p align="left" class="article-content warning"><b>Time Sighted: {{ post.Time }}</b></p>
+
+                <p align="left" class="article-content"><b>Person Missing</b></p>
+                
+                <p align="left" class="article-content">Name: {{ post.AmberAlert.name }} </p>
+                <p align="left" class="article-content">Age: {{ post.AmberAlert.age }} </p>
+                <p align="left" class="article-content">Height: {{ post.AmberAlert.height }} </p>
+                <p align="left" class="article-content">Weight: {{ post.AmberAlert.weight }} </p>
+                <p align="left" class="article-content">Eye Color: {{ post.AmberAlert.eye_color }} </p>
+                <p align="left" class="article-content">Hair Color: {{ post.AmberAlert.hair_color }} </p>
+              </td>
+              
+              <td style="width:20%">
+                <p align="left" class="article-content warning"><b>Seen: {{ post.time_difference }} ago </b></p>
+                <p align="left" class="article-content"><b>Vehicle Information</b></p>
+                <p align="left" class="article-content">License Plate: {{ post.AmberAlert.vehicle_information.license_plate }} </p>
+                <p align="left" class="article-content">Color: {{ post.AmberAlert.vehicle_information.color }} </p>
+                <p align="left" class="article-content">Make: {{ post.AmberAlert.vehicle_information.car_brand }} </p>
+                <p align="left" class="article-content">Model: {{ post.AmberAlert.vehicle_information.car_model }} </p>
+                <p align="left" class="article-content hide"> .</p>
+                <p align="left" class="article-content hide"> .</p>
+              </td>
+            
+            
+              <td style="width:40%">  
+                  <h3>Last Seen</h3>
+                  <!--The div element for the map -->
+                  
+                  <div id="{{ post.AmberAlert.name }}" style="height: 400px; width: 100%;"></div>
+              </td>  
+            </tr>
+
+          </table>
+		 
+      </article>
+    {% endfor %}
+
+    
+    <script>
+      
+      var coords = [];
+      var names = [];
+      var markers = [];
+      var maps = [];
+      var counter = 0;
+      
+      {% for post in posts %}
+        coords[counter] = {lat:"{{post.Location.Latitude}}", lng:"{{post.Location.Longitude}}"};
+        names[counter] = "{{ post.AmberAlert.name }}";
+        counter = counter + 1;
+      {% endfor %}
+  
+
+      function initMap() {
+          for(var i = 0, length = coords.length; i < length; i++)
+          {
+              var point = coords[i];
+              var latlng = new google.maps.LatLng(point.lat, point.lng);
+
+              maps[i] = new google.maps.Map(document.getElementById(names[i]), {
+                  zoom: 17,
+                  center: latlng
+              });
+
+              markers[i] = new google.maps.Marker({
+                  position: latlng,
+                  map: maps[i]
+              });
+          }
+        }
+
+    </script>
+
+    <script async defer
+      src="">
+    </script>
+{% endblock %}
